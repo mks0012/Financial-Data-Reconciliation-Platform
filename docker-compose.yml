@@ -1,0 +1,11 @@
+services:
+  recondesk:
+    build: .
+    ports:
+      - "8003:8003"
+    volumes:
+      - recondesk-data:/app/data
+
+volumes:
+  recondesk-data:
+

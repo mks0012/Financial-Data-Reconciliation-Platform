@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ReconDesk reconciliation and exception operations workspace" />
+    <title>ReconDesk — Reconciliation Operations</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/fixes.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand"><div class="logo"><span></span><span></span></div><div><strong>ReconDesk</strong><small>RECONCILIATION OPS</small></div></div>
+      <div class="workspace"><div class="workspace-icon">NW</div><div><strong>Northwind Finance</strong><small>Production workspace</small></div><span>⌄</span></div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav>
+        <button class="nav active" data-view="overview"><i>◫</i>Overview</button>
+        <button class="nav" data-view="runs"><i>≋</i>Reconciliation runs <em id="runCount">3</em></button>
+        <button class="nav" data-view="exceptions"><i>◇</i>Exceptions <em class="warn" id="openCount">7</em></button>
+        <button class="nav" data-view="import"><i>↑</i>New reconciliation</button>
+      </nav>
+      <p class="nav-label">GOVERNANCE</p>
+      <nav><button class="nav static"><i>⌁</i>Match rules</button><button class="nav static"><i>✓</i>Audit trail</button></nav>
+      <div class="control-card"><div class="control-icon">✓</div><div><strong>Controls active</strong><small>Tolerance rules + audit history</small></div></div>
+      <div class="profile"><div class="avatar">ZX</div><div><strong>Xu Zixuan</strong><small>Workspace admin</small></div><span>•••</span></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="breadcrumb"><span>Northwind Finance</span><b>/</b><strong id="currentView">Overview</strong></div>
+        <div class="top-actions"><button class="icon-button">⌕</button><button class="button ghost" id="exportButton">↓ Export exceptions</button><button class="button primary" data-view-link="import">＋ New run</button></div>
+      </header>
+
+      <section class="view active" id="overviewView">
+        <div class="headline"><div><p class="eyebrow">MONTH-END CONTROL CENTER</p><h1>Close the books<br /><span>with explainable matches.</span></h1><p>Compare ledgers, apply tolerances, and move every exception through a traceable review workflow.</p></div><div class="close-status"><i></i><div><strong>July close in progress</strong><small>2 of 3 reconciliations controlled</small></div></div></div>
+
+        <div class="metric-grid">
+          <article class="metric hero"><p>Latest match rate</p><strong id="matchRate">99.52%</strong><small>1,242 of 1,248 rows</small><div class="rings"><i></i><i></i><i></i></div></article>
+          <article class="metric"><div class="metric-icon blue">≋</div><p>Runs completed</p><strong id="runsTotal">3</strong><small>Current close cycle</small><b class="tag good">On track</b></article>
+          <article class="metric"><div class="metric-icon amber">◇</div><p>Open exceptions</p><strong id="openTotal">7</strong><small>Across active runs</small><b class="tag warning">Needs review</b></article>
+          <article class="metric"><div class="metric-icon coral">!</div><p>High-risk items</p><strong id="highRisk">4</strong><small>Material or missing</small><b class="tag risk">Priority</b></article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel latest-panel">
+            <div class="panel-head"><div><p class="eyebrow">ACTIVE RECONCILIATION</p><h2 id="latestName">July payment settlement</h2></div><button class="text-button" data-view-link="exceptions">Review exceptions →</button></div>
+            <div class="source-flow"><div><span>LEFT SOURCE</span><strong id="leftSource">gateway_july.csv</strong><small id="leftRows">1,248 rows</small></div><div class="flow-center"><b>99.52%</b><span><i></i></span><small>matched by reference</small></div><div><span>RIGHT SOURCE</span><strong id="rightSource">bank_july.csv</strong><small id="rightRows">1,247 rows</small></div></div>
+            <div class="recon-summary"><span><small>Matched</small><b id="matchedRows">1,242</b></span><span><small>Exceptions</small><b id="latestExceptions">6</b></span><span><small>Amount delta</small><b id="amountDelta">$622.00</b></span><span><small>Tolerance</small><b id="tolerance">$0.50 / 1 day</b></span></div>
+          </article>
+          <article class="panel mix-panel"><div class="panel-head"><div><p class="eyebrow">EXCEPTION MIX</p><h2>What needs attention</h2></div><span class="range">All active</span></div><div id="exceptionMix"></div></article>
+        </div>
+
+        <div class="bottom-grid">
+          <article class="panel queue-panel"><div class="panel-head"><div><p class="eyebrow">REVIEW QUEUE</p><h2>Priority exceptions</h2></div><button class="text-button" data-view-link="exceptions">Open queue →</button></div><div id="priorityQueue"></div></article>
+          <article class="audit-card"><p class="eyebrow light">CONTROL EVIDENCE</p><h2>Every decision leaves a trail.</h2><p>Original values, tolerances, reviewer identity, notes, and state changes remain attached to each exception.</p><div id="auditList"></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="runsView">
+        <div class="page-title"><p class="eyebrow">RUN HISTORY</p><h1>Reconciliation runs</h1><p>Source lineage, applied tolerance rules, matching results, and review completion in one ledger.</p></div>
+        <div class="panel table-panel" id="runsTable"></div>
+      </section>
+
+      <section class="view" id="exceptionsView">
+        <div class="page-title row"><div><p class="eyebrow">EXCEPTION WORKBENCH</p><h1>Review queue</h1><p>Explain, resolve, and reopen discrepancies without losing the original evidence.</p></div><div class="filter-tabs"><button class="active" data-filter="OPEN">Open</button><button data-filter="RESOLVED">Resolved</button><button data-filter="ALL">All</button></div></div>
+        <div id="exceptionCards" class="exception-list"></div>
+      </section>
+
+      <section class="view" id="importView">
+        <div class="page-title"><p class="eyebrow">CONTROLLED INGESTION</p><h1>Start a reconciliation</h1><p>Upload two UTF-8 CSV ledgers and define the amount and booking-date tolerances.</p></div>
+        <div class="import-grid">
+          <form id="reconcileForm" class="panel import-form">
+            <label>Run name<input name="name" value="August settlement validation" required minlength="3" /></label>
+            <div class="two-col"><label>Amount tolerance<input name="amount_tolerance" type="number" min="0" step="0.01" value="0.50" /></label><label>Date tolerance (days)<input name="date_tolerance_days" type="number" min="0" max="31" value="1" /></label></div>
+            <div class="upload-row"><label class="upload-box"><span>01</span><strong>Left ledger CSV</strong><small>reference, amount, date</small><input name="left_file" type="file" accept=".csv,text/csv" required /></label><label class="upload-box"><span>02</span><strong>Right ledger CSV</strong><small>reference, amount, date</small><input name="right_file" type="file" accept=".csv,text/csv" required /></label></div>
+            <button class="button primary full" type="submit">Validate and reconcile</button>
+          </form>
+          <aside class="schema-card"><p class="eyebrow light">EXPECTED CONTRACT</p><h2>A small, explicit schema.</h2><code>reference,amount,date,description<br />PAY-1001,149.90,2026-08-01,Order 1001</code><ul><li>Exact reference matching</li><li>Decimal-safe amount comparison</li><li>ISO date parsing and day tolerance</li><li>Duplicate-key detection</li><li>2 MB bounded file input</li></ul></aside>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="resolveDialog"><form id="resolveForm"><input type="hidden" name="exceptionId" /><div class="dialog-head"><div><p class="eyebrow">REVIEW DECISION</p><h2>Resolve exception</h2></div><button type="button" id="closeDialog">×</button></div><label>Reviewer<input name="actor" value="Alex Chen" required /></label><label>Resolution note<textarea name="note" rows="5" required>Evidence reviewed and correction confirmed.</textarea></label><p>The note and reviewer identity will be retained in the audit trail.</p><button class="button primary full" type="submit">Record resolution</button></form></dialog>
+    <div class="toast" id="toast"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
